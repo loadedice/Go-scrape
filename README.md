@@ -25,3 +25,6 @@ But if you're dealing with say the width of images, you don't want something lik
 ###Todo
 * Make a script to go through each url (the output doesn't always have to be a url as well) in the output file and complete the task again (we need to go deeper!) 
 * Come up with more "configs" in examples.
+* Remove duplicate entries if it's a URL.
+* Room for optimisation.
+* Add in warnings when overwriting existing file.
