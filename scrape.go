@@ -2,10 +2,12 @@ package main
 
 import (
 	"code.google.com/p/go.net/html"
+	"fmt"
 	"github.com/BurntSushi/toml"
 	"io/ioutil"
 	"log"
 	"net/http"
+	"net/url"
 	"os"
 	"strings"
 )
@@ -13,6 +15,7 @@ import (
 type Config struct {
 	Tag           string
 	AttributeName string
+	IsURL         bool
 }
 
 func DownloadURL(url string) string {
@@ -57,4 +60,24 @@ func main() {
 		}
 	}
 	f(doc)
+	if cfg.IsURL {
+		fileCont, err := ioutil.ReadFile(os.Args[3])
+		if err != nil {
+			log.Fatal(err)
+		}
+		lines := strings.Split(string(fileCont), "\n")
+		for i := range lines {
+			if strings.HasPrefix(lines[i], "#") {
+				lines[i] = os.Args[2] + lines[i]
+				fmt.Println(lines[i])
+			} else if strings.Index(lines[i], ":") == -1 { //right now with this line I'm put in a position that makes this work, or not work. If the url has : in it somewhere, like a file name, it won't work correctly, but that probobally violates a standard so I shouldn't cater for it. I could just do :// so it works with *most* protocols, but what about mailto:? Surely there are others that are like mailto: either way this *should* work most of the time. if not I'll work out a regex for it...maybe.
+				u, err := url.Parse(os.Args[2])
+				if err != nil {
+					log.Fatal(err)
+				}
+				lines[i] = u.Scheme + "://" + u.Host + lines[i]
+				fmt.Println(lines[i])
+			}
+		}
+	}
 }
