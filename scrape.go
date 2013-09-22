@@ -2,7 +2,6 @@ package main
 
 import (
 	"code.google.com/p/go.net/html"
-	"fmt"
 	"github.com/BurntSushi/toml"
 	"io/ioutil"
 	"log"
@@ -35,7 +34,6 @@ func main() {
 	var cfg Config
 	os.Create(os.Args[3])
 	write, _ := os.OpenFile(os.Args[3], os.O_RDWR|os.O_APPEND, 0666)
-	//write.WriteString(os.Args[2] + "\n") This line will need to be uncommented when I make a script to deal with things that are linked like ../file.ext, with out the whole URL. Unless it works already.
 	if _, err := toml.DecodeFile(os.Args[1], &cfg); err != nil {
 		log.Fatal(err)
 		return
@@ -69,15 +67,17 @@ func main() {
 		for i := range lines {
 			if strings.HasPrefix(lines[i], "#") {
 				lines[i] = os.Args[2] + lines[i]
-				fmt.Println(lines[i])
 			} else if strings.Index(lines[i], ":") == -1 { //right now with this line I'm put in a position that makes this work, or not work. If the url has : in it somewhere, like a file name, it won't work correctly, but that probobally violates a standard so I shouldn't cater for it. I could just do :// so it works with *most* protocols, but what about mailto:? Surely there are others that are like mailto: either way this *should* work most of the time. if not I'll work out a regex for it...maybe.
 				u, err := url.Parse(os.Args[2])
 				if err != nil {
 					log.Fatal(err)
 				}
 				lines[i] = u.Scheme + "://" + u.Host + lines[i]
-				fmt.Println(lines[i])
 			}
+		}
+		os.Create(os.Args[3])
+		for i := range lines {
+			write.WriteString(lines[i] + "\n")
 		}
 	}
 }
