@@ -4,11 +4,10 @@ Go-scrape
 A simple HTML scraper.
 
 ###How to use
-```./scrape (config) (url) (output file)``` Example: ```./scrape configs/ahref.toml http://golang.org/doc/ golinks ```
+```./scrape (config) (url) ``` Example: ```./scrape configs/ahref.toml http://golang.org/doc/  ```
 
 
-
-After running the program, you should end up with the output file you gave it in the arguement. Then you'd run something like ```wget -i outputfile``` to download all of them. 
+Say you wanted to download all the URLs you just scraped, you'd cat the output into a file, lets call that file ouputfile, then you'd run something like ```wget -i outputfile``` to download all of them. 
 
 #####How the config files work
 The configs are written in toml. They're very simple and straight forward. It comes with some examples, here is an commented version of the imgsrc example included.
@@ -22,9 +21,5 @@ But if you're dealing with say the width of images, you don't want something lik
 
 
 ###Todo
-* Make a script to go through each url in the output file and complete the task again (we need to go deeper!) 
-* Come up with more "configs" in examples.
-* Remove duplicate entries if it's a URL.
-* Room for optimisation.
-* Add in warnings when overwriting existing file.
-* Just make it print out the lines rather than put it into a file. You can just cat it in to a file if you want to. This allows you to use it with other programs easily and so you can also do some sed trickery with pipes with ease.
+* Make some helper scripts to do things like remove duplicate entries and go through each url that you've put into your output file and go through each one again, to go deeper.
+
