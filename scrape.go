@@ -59,15 +59,17 @@ func main() {
 	}
 	f(doc)
 	if cfg.IsURL {
+		u, err := url.Parse(os.Args[2])
+		if err != nil {
+			log.Fatal(err)
+		}
 		for i := range lines {
 			if strings.HasPrefix(lines[i], "#") {
 				lines[i] = os.Args[2] + lines[i]
-			} else if strings.Index(lines[i], ":") == -1 { //If the url has : in it somewhere, like a file name, it won't work correctly, but that probobally violates a standard so I shouldn't cater for it. I could just do :// so it works with *most* protocols, but what about mailto:? Surely there are others that are like mailto: either way this *should* work most of the time. if not I'll work out a regex for it...maybe.
-				u, err := url.Parse(os.Args[2])
-				if err != nil {
-					log.Fatal(err)
-				}
-				lines[i] = u.Scheme + "://" + u.Host + lines[i]
+			} else if strings.HasPrefix(lines[i], "//") {
+				lines[i] = u.Scheme + ":" + lines[i]
+			} else if strings.Index(lines[i], ":") == -1 { //this might not work all the time.
+				lines[i] = u.Scheme + "://" + u.Host + "/" + lines[i]
 			}
 		}
 	}
