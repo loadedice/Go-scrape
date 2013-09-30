@@ -71,7 +71,7 @@ func main() {
 			} else if strings.HasPrefix(lines[i], "//") {
 				lines[i] = u.Scheme + ":" + lines[i]
 			} else if strings.Index(lines[i], ":") == -1 { //this might not work all the time.
-				lines[i] = u.Scheme + "://" + u.Host + "/" + lines[i]
+				lines[i] = os.Args[2] + lines[i]
 			}
 		}
 	}
